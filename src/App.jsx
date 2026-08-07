@@ -9,8 +9,7 @@ import { ProductModal } from './components/ProductModal';
 import { UploadModal } from './components/UploadModal';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { INITIAL_PRODUCTS, DISCORD_SERVER_LINK } from './data/initialProducts';
-import { MessageSquare, ShieldCheck, PlusCircle, RefreshCw, ExternalLink, Lock, ShieldAlert, Check, ShoppingBag, Star, CloudSync } from 'lucide-react';
-import { fetchCloudProducts, saveCloudProducts } from './utils/cloudDb';
+import { MessageSquare, ShieldCheck, PlusCircle, RefreshCw, ExternalLink, Lock, ShieldAlert, Check, ShoppingBag, Star, Download, Save, FileCode } from 'lucide-react';
 
 export function App() {
   const [products, setProducts] = useState(() => {
@@ -24,24 +23,6 @@ export function App() {
     }
     return INITIAL_PRODUCTS;
   });
-
-  const [isLoadingCloud, setIsLoadingCloud] = useState(false);
-
-  // Fetch live products from Cloud Database on initial mount so all users sync
-  useEffect(() => {
-    let isMounted = true;
-    const syncFromCloud = async () => {
-      setIsLoadingCloud(true);
-      const cloudData = await fetchCloudProducts();
-      if (isMounted && cloudData && Array.isArray(cloudData) && cloudData.length > 0) {
-        setProducts(cloudData);
-        localStorage.setItem('wt_marketplace_products', JSON.stringify(cloudData));
-      }
-      setIsLoadingCloud(false);
-    };
-    syncFromCloud();
-    return () => { isMounted = false; };
-  }, []);
 
   // Navigation tab state ('products' | 'reviews' | 'discord')
   const [activeTab, setActiveTab] = useState('products');
@@ -58,17 +39,16 @@ export function App() {
     return localStorage.getItem('wt_admin_logged_in') === 'true';
   });
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
+  const [downloadSuccessMessage, setDownloadSuccessMessage] = useState('');
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
-  // Save products to LocalStorage and Sync to Cloud DB
-  const syncAndSaveProducts = (updatedProducts) => {
-    setProducts(updatedProducts);
-    localStorage.setItem('wt_marketplace_products', JSON.stringify(updatedProducts));
-    saveCloudProducts(updatedProducts);
-  };
+  // Save products to LocalStorage
+  useEffect(() => {
+    localStorage.setItem('wt_marketplace_products', JSON.stringify(products));
+  }, [products]);
 
   const handleAdminLoginSuccess = () => {
     setIsAdminLoggedIn(true);
@@ -98,14 +78,13 @@ export function App() {
   // Save Product (Admin only)
   const handleSaveProduct = (productToSave) => {
     if (!isAdminLoggedIn) return;
-    const exists = products.some((p) => p.id === productToSave.id);
-    let updated;
-    if (exists) {
-      updated = products.map((p) => (p.id === productToSave.id ? productToSave : p));
-    } else {
-      updated = [productToSave, ...products];
-    }
-    syncAndSaveProducts(updated);
+    setProducts((prev) => {
+      const exists = prev.some((p) => p.id === productToSave.id);
+      if (exists) {
+        return prev.map((p) => (p.id === productToSave.id ? productToSave : p));
+      }
+      return [productToSave, ...prev];
+    });
     setEditingProduct(null);
   };
 
@@ -118,17 +97,78 @@ export function App() {
   const handleDeleteProduct = (productId) => {
     if (!isAdminLoggedIn) return;
     if (window.confirm('Are you sure you want to delete this account listing?')) {
-      const updated = products.filter((p) => p.id !== productId);
-      syncAndSaveProducts(updated);
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
     }
   };
 
   const handleResetToDefaultProducts = () => {
     if (!isAdminLoggedIn) return;
     if (window.confirm('Reset catalog to initial sample products?')) {
-      syncAndSaveProducts(INITIAL_PRODUCTS);
+      setProducts(INITIAL_PRODUCTS);
       localStorage.removeItem('wt_marketplace_products');
     }
+  };
+
+  // Download 1-Click initialProducts.js file to upload to GitHub
+  const handleDownloadUpdatedCatalogFile = () => {
+    const fileContent = `import { convertGoogleDriveUrl } from '../utils/driveConverter';
+
+export const DISCORD_SERVER_LINK = 'https://discord.gg/ppJV324MR9';
+
+export const FALLBACK_ACCOUNT_IMAGE = \`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="%230f141d"/><text x="400" y="250" fill="%23f59e0b" font-family="sans-serif" font-size="28" font-weight="700" text-anchor="middle">WAR THUNDER TOP TIER ACCOUNT</text></svg>\`;
+
+export const INITIAL_PRODUCTS = ${JSON.stringify(products, null, 2)};
+
+export const parseTitleTags = (title = '') => {
+  const tags = [];
+  const lower = title.toLowerCase();
+
+  if (lower.includes('special discount') || lower.includes('discount')) tags.push({ label: 'Special Discount', type: 'red' });
+  if (lower.includes('full access') || lower.includes('email included')) tags.push({ label: 'Full Access', type: 'green' });
+  if (lower.includes('su-30sm2')) tags.push({ label: 'Su-30SM2', type: 'gold' });
+  if (lower.includes('mig-29')) tags.push({ label: 'MiG-29', type: 'cyan' });
+  if (lower.includes('su-25k')) tags.push({ label: 'Su-25K', type: 'cyan' });
+  if (lower.includes('f-16c')) tags.push({ label: 'F-16C', type: 'gold' });
+  if (lower.includes('f-15e')) tags.push({ label: 'F-15E', type: 'gold' });
+  
+  const slMatch = title.match(/(\\d+(\\.\\d+)?\\s*[mMkK]?)\\s*(silver lions|sl)/i);
+  if (slMatch) {
+    tags.push({ label: \`\${slMatch[1].toUpperCase()} Silver Lions\`, type: 'gold' });
+  }
+
+  if (lower.includes('russia') || lower.includes('ussr')) tags.push({ label: 'USSR / Russia', type: 'purple' });
+  if (lower.includes('usa') || lower.includes('us air')) tags.push({ label: 'USA', type: 'purple' });
+  if (lower.includes('germany') || lower.includes('german')) tags.push({ label: 'Germany', type: 'purple' });
+  if (lower.includes('rank ix') || lower.includes('rank 9')) tags.push({ label: 'Rank IX Air', type: 'purple' });
+
+  return tags;
+};
+
+export const handleBuyNowRedirect = (product) => {
+  const message = \`Hello! I would like to buy this War Thunder account:\\n\\n🛒 **Title:** \${product.title}\\n💵 **Price:** $\${product.price} USD\\n🛡️ **Access:** \${product.accessType}\\n🆔 **Product ID:** \${product.id}\`;
+
+  try {
+    navigator.clipboard.writeText(message);
+  } catch (err) {
+    console.error('Clipboard copy failed:', err);
+  }
+
+  window.open(DISCORD_SERVER_LINK, '_blank');
+};
+`;
+
+    const blob = new Blob([fileContent], { type: 'text/javascript' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'initialProducts.js';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    setDownloadSuccessMessage('initialProducts.js downloaded! Drag & drop it to your GitHub src/data folder.');
+    setTimeout(() => setDownloadSuccessMessage(''), 6000);
   };
 
   // Filter Logic
@@ -301,24 +341,46 @@ export function App() {
                 </div>
               )}
 
-              {/* Admin Reset Option */}
+              {/* Admin Save & Download Control Panel */}
               {isAdminLoggedIn && (
-                <div style={{ marginTop: '3rem', textAlign: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
-                  <button
-                    onClick={handleResetToDefaultProducts}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'var(--text-dim)',
-                      fontSize: '0.75rem',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.35rem'
-                    }}
-                  >
-                    <RefreshCw size={12} /> Reset Catalog to Defaults
-                  </button>
+                <div style={{
+                  marginTop: '3rem',
+                  padding: '1.5rem',
+                  background: 'rgba(245, 158, 11, 0.08)',
+                  border: '1px solid var(--border-gold)',
+                  borderRadius: 'var(--radius-md)',
+                  textAlign: 'center'
+                }}>
+                  <h4 style={{ color: 'var(--accent-gold-light)', fontSize: '1.1rem', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                    <Save size={18} /> OWNER UPDATE CONTROL PANEL
+                  </h4>
+                  <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', marginBottom: '1rem', maxWidth: '600px', margin: '0 auto 1rem' }}>
+                    Made edits or added/deleted accounts? Click below to download your updated catalog file, then drop it into your GitHub repository to publish changes globally!
+                  </p>
+
+                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <button
+                      onClick={handleDownloadUpdatedCatalogFile}
+                      className="btn-primary"
+                      style={{ padding: '0.75rem 1.5rem', fontSize: '0.9rem' }}
+                    >
+                      <Download size={18} /> SAVE WEBSITE UPDATE FILE (initialProducts.js)
+                    </button>
+
+                    <button
+                      onClick={handleResetToDefaultProducts}
+                      className="btn-secondary"
+                      style={{ padding: '0.75rem 1.25rem', fontSize: '0.85rem' }}
+                    >
+                      <RefreshCw size={14} /> Reset Catalog to Defaults
+                    </button>
+                  </div>
+
+                  {downloadSuccessMessage && (
+                    <div style={{ marginTop: '0.85rem', fontSize: '0.825rem', color: '#34d399', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+                      <Check size={16} /> {downloadSuccessMessage}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
