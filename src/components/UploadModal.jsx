@@ -234,23 +234,21 @@ export const UploadModal = ({ isOpen, onClose, onSaveProduct, editingProduct, al
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {/* Quick Title Preset Helper */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button
-              type="button"
-              onClick={handleApplyPresetExample}
-              className="btn-outline-gold"
-              style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}
-            >
-              Fill Example Title
-            </button>
-          </div>
-
           {/* Title Input */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-bright)', marginBottom: '0.4rem' }}>
-              PRODUCT LISTING TITLE *
-            </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+              <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-bright)' }}>
+                PRODUCT LISTING TITLE *
+              </label>
+              <button
+                type="button"
+                onClick={handleApplyPresetExample}
+                className="btn-outline-gold"
+                style={{ padding: '0.25rem 0.6rem', fontSize: '0.7rem' }}
+              >
+                Fill Example Title
+              </button>
+            </div>
             <textarea
               rows={3}
               value={title}

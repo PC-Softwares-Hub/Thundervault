@@ -9,7 +9,7 @@ import { ProductModal } from './components/ProductModal';
 import { UploadModal } from './components/UploadModal';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { INITIAL_PRODUCTS, DISCORD_SERVER_LINK } from './data/initialProducts';
-import { MessageSquare, ShieldCheck, PlusCircle, RefreshCw, ExternalLink, Lock, ShieldAlert, Check, ShoppingBag, Star, Download, Save, FileCode } from 'lucide-react';
+import { MessageSquare, ShieldCheck, PlusCircle, RefreshCw, ExternalLink, Lock, ShieldAlert, Check, ShoppingBag, Star, Download, Save, ArrowUpDown } from 'lucide-react';
 
 export function App() {
   const [products, setProducts] = useState(() => {
@@ -33,6 +33,7 @@ export function App() {
   const [selectedRank, setSelectedRank] = useState('All Ranks');
   const [selectedAccess, setSelectedAccess] = useState('All Access');
   const [maxPrice, setMaxPrice] = useState(800);
+  const [sortBy, setSortBy] = useState('sale_price_asc'); // 'sale_price_asc' | 'price_asc' | 'price_desc' | 'discount_desc'
 
   // Admin authentication state (Encrypted via SHA-256)
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
@@ -68,6 +69,7 @@ export function App() {
     setSelectedRank('All Ranks');
     setSelectedAccess('All Access');
     setMaxPrice(800);
+    setSortBy('sale_price_asc');
   };
 
   const handleQuickFilter = (tag) => {
@@ -123,13 +125,15 @@ export const parseTitleTags = (title = '') => {
   const tags = [];
   const lower = title.toLowerCase();
 
-  if (lower.includes('special discount') || lower.includes('discount')) tags.push({ label: 'Special Discount', type: 'red' });
+  if (lower.includes('special discount') || lower.includes('discount') || lower.includes('sale')) tags.push({ label: 'Special Discount', type: 'red' });
   if (lower.includes('full access') || lower.includes('email included')) tags.push({ label: 'Full Access', type: 'green' });
   if (lower.includes('su-30sm2')) tags.push({ label: 'Su-30SM2', type: 'gold' });
   if (lower.includes('mig-29')) tags.push({ label: 'MiG-29', type: 'cyan' });
   if (lower.includes('su-25k')) tags.push({ label: 'Su-25K', type: 'cyan' });
-  if (lower.includes('f-16c')) tags.push({ label: 'F-16C', type: 'gold' });
-  if (lower.includes('f-15e')) tags.push({ label: 'F-15E', type: 'gold' });
+  if (lower.includes('f-16c') || lower.includes('f16c')) tags.push({ label: 'F-16C', type: 'gold' });
+  if (lower.includes('f-15e') || lower.includes('f15e')) tags.push({ label: 'F-15E', type: 'gold' });
+  if (lower.includes('f-14') || lower.includes('f14')) tags.push({ label: 'F-14 Tomcat', type: 'gold' });
+  if (lower.includes('av8b')) tags.push({ label: 'AV-8B Harrier', type: 'cyan' });
   
   const slMatch = title.match(/(\\d+(\\.\\d+)?\\s*[mMkK]?)\\s*(silver lions|sl)/i);
   if (slMatch) {
@@ -137,9 +141,10 @@ export const parseTitleTags = (title = '') => {
   }
 
   if (lower.includes('russia') || lower.includes('ussr')) tags.push({ label: 'USSR / Russia', type: 'purple' });
-  if (lower.includes('usa') || lower.includes('us air')) tags.push({ label: 'USA', type: 'purple' });
+  if (lower.includes('usa') || lower.includes('us air') || lower.includes('us rank') || lower.includes('us top')) tags.push({ label: 'USA', type: 'purple' });
   if (lower.includes('germany') || lower.includes('german')) tags.push({ label: 'Germany', type: 'purple' });
   if (lower.includes('rank ix') || lower.includes('rank 9')) tags.push({ label: 'Rank IX Air', type: 'purple' });
+  if (lower.includes('rank viii') || lower.includes('rank 8')) tags.push({ label: 'Rank VIII', type: 'purple' });
 
   return tags;
 };
@@ -171,7 +176,7 @@ export const handleBuyNowRedirect = (product) => {
     setTimeout(() => setDownloadSuccessMessage(''), 6000);
   };
 
-  // Filter Logic
+  // Robust Nation & Attribute Filter Logic
   const filteredProducts = products.filter((product) => {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -186,21 +191,36 @@ export const handleBuyNowRedirect = (product) => {
       }
     }
 
-    // Robust Nation Filter Check (USA, USSR/Russia, Germany, Great Britain, Japan, China, Sweden)
+    // Flexible Nation Filtering
     if (selectedNation !== 'All') {
       const pNation = (product.nation || '').toLowerCase();
       const pTitle = (product.title || '').toLowerCase();
-      const sel = selectedNation.toLowerCase();
 
-      if (sel.includes('ussr') || sel.includes('russia')) {
-        const isUssr = pNation.includes('ussr') || pNation.includes('russia') || pTitle.includes('ussr') || pTitle.includes('russia');
-        if (!isUssr) return false;
-      } else if (sel.includes('usa') || sel === 'us') {
-        const isUsa = pNation.includes('usa') || pNation.includes('us') || pTitle.includes('usa') || pTitle.includes('us rank') || pTitle.includes('us air') || pTitle.includes('us top tier');
-        if (!isUsa) return false;
+      if (selectedNation === 'USSR') {
+        const isUSSR = pNation.includes('ussr') || pNation.includes('russia') || pTitle.includes('ussr') || pTitle.includes('russia');
+        if (!isUSSR) return false;
+      } else if (selectedNation === 'USA') {
+        const isUSA = pNation.includes('usa') || pNation.includes('us') || pTitle.includes('usa') || pTitle.includes('us air') || pTitle.includes('us rank') || pTitle.includes('us top');
+        if (!isUSA) return false;
+      } else if (selectedNation === 'Germany') {
+        const isGermany = pNation.includes('germany') || pNation.includes('german') || pTitle.includes('germany') || pTitle.includes('german');
+        if (!isGermany) return false;
+      } else if (selectedNation === 'Great Britain') {
+        const isBritain = pNation.includes('britain') || pNation.includes('uk') || pTitle.includes('britain') || pTitle.includes('uk');
+        if (!isBritain) return false;
+      } else if (selectedNation === 'Japan') {
+        const isJapan = pNation.includes('japan') || pTitle.includes('japan');
+        if (!isJapan) return false;
+      } else if (selectedNation === 'China') {
+        const isChina = pNation.includes('china') || pTitle.includes('china');
+        if (!isChina) return false;
+      } else if (selectedNation === 'Sweden') {
+        const isSweden = pNation.includes('sweden') || pTitle.includes('sweden');
+        if (!isSweden) return false;
       } else {
-        const isMatch = pNation.includes(sel) || pTitle.includes(sel);
-        if (!isMatch) return false;
+        if (!pNation.includes(selectedNation.toLowerCase()) && !pTitle.includes(selectedNation.toLowerCase())) {
+          return false;
+        }
       }
     }
 
@@ -219,18 +239,29 @@ export const handleBuyNowRedirect = (product) => {
     return true;
   });
 
-  // Sort offers: Lowest price first + prioritize items on sale (-12% etc.)
+  // Sorting Logic: On Sale items first (highest discount %), then lowest price!
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    const aOnSale = a.discountPercentage && a.discountPercentage > 0 ? 1 : 0;
-    const bOnSale = b.discountPercentage && b.discountPercentage > 0 ? 1 : 0;
-
-    // Prioritize items on sale
-    if (aOnSale !== bOnSale) {
-      return bOnSale - aOnSale;
+    if (sortBy === 'sale_price_asc') {
+      const aDiscount = a.discountPercentage || 0;
+      const bDiscount = b.discountPercentage || 0;
+      // If both have discounts, sort by higher discount first, then lower price
+      if (aDiscount > 0 && bDiscount > 0) {
+        if (bDiscount !== aDiscount) return bDiscount - aDiscount;
+        return a.price - b.price;
+      }
+      // Put on sale item first
+      if (aDiscount > 0 && bDiscount === 0) return -1;
+      if (bDiscount > 0 && aDiscount === 0) return 1;
+      // If neither is on sale, sort by lowest price first
+      return a.price - b.price;
+    } else if (sortBy === 'price_asc') {
+      return a.price - b.price;
+    } else if (sortBy === 'price_desc') {
+      return b.price - a.price;
+    } else if (sortBy === 'discount_desc') {
+      return (b.discountPercentage || 0) - (a.discountPercentage || 0);
     }
-
-    // Then sort by lowest price first
-    return a.price - b.price;
+    return 0;
   });
 
   return (
@@ -286,18 +317,44 @@ export const handleBuyNowRedirect = (product) => {
                 background: 'var(--bg-secondary)',
                 padding: '0.85rem 1.25rem',
                 borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-subtle)'
+                border: '1px solid var(--border-subtle)',
+                flexWrap: 'wrap',
+                gap: '0.75rem'
               }}>
                 <div>
                   <h2 style={{ fontSize: '1.2rem', margin: 0, color: 'var(--text-bright)' }}>
                     AVAILABLE WAR THUNDER ACCOUNTS
                   </h2>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    Showing <strong style={{ color: 'var(--accent-gold)' }}>{sortedProducts.length}</strong> verified account listings (Sorted by Lowest Price & Deals)
+                    Showing <strong style={{ color: 'var(--accent-gold)' }}>{sortedProducts.length}</strong> verified account listings
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  {/* Sort Dropdown Selector */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--bg-input)', padding: '0.35rem 0.65rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                    <ArrowUpDown size={14} color="var(--accent-gold)" />
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>SORT:</span>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--text-bright)',
+                        fontSize: '0.775rem',
+                        fontWeight: '700',
+                        outline: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <option value="sale_price_asc">🔥 On Sale First & Lowest Price</option>
+                      <option value="price_asc">💲 Lowest Price First</option>
+                      <option value="discount_desc">🏷️ Highest Discount First</option>
+                      <option value="price_desc">💎 Highest Price First</option>
+                    </select>
+                  </div>
+
                   {isAdminLoggedIn ? (
                     <button
                       onClick={() => {
