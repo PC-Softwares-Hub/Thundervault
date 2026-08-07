@@ -9,7 +9,8 @@ import { ProductModal } from './components/ProductModal';
 import { UploadModal } from './components/UploadModal';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { INITIAL_PRODUCTS, DISCORD_SERVER_LINK } from './data/initialProducts';
-import { MessageSquare, ShieldCheck, PlusCircle, RefreshCw, ExternalLink, Lock, ShieldAlert, Check, ShoppingBag, Star } from 'lucide-react';
+import { MessageSquare, ShieldCheck, PlusCircle, RefreshCw, ExternalLink, Lock, ShieldAlert, Check, ShoppingBag, Star, CloudSync } from 'lucide-react';
+import { fetchCloudProducts, saveCloudProducts } from './utils/cloudDb';
 
 export function App() {
   const [products, setProducts] = useState(() => {
@@ -23,6 +24,24 @@ export function App() {
     }
     return INITIAL_PRODUCTS;
   });
+
+  const [isLoadingCloud, setIsLoadingCloud] = useState(false);
+
+  // Fetch live products from Cloud Database on initial mount so all users sync
+  useEffect(() => {
+    let isMounted = true;
+    const syncFromCloud = async () => {
+      setIsLoadingCloud(true);
+      const cloudData = await fetchCloudProducts();
+      if (isMounted && cloudData && Array.isArray(cloudData) && cloudData.length > 0) {
+        setProducts(cloudData);
+        localStorage.setItem('wt_marketplace_products', JSON.stringify(cloudData));
+      }
+      setIsLoadingCloud(false);
+    };
+    syncFromCloud();
+    return () => { isMounted = false; };
+  }, []);
 
   // Navigation tab state ('products' | 'reviews' | 'discord')
   const [activeTab, setActiveTab] = useState('products');
@@ -44,10 +63,12 @@ export function App() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
-  // Save products to LocalStorage
-  useEffect(() => {
-    localStorage.setItem('wt_marketplace_products', JSON.stringify(products));
-  }, [products]);
+  // Save products to LocalStorage and Sync to Cloud DB
+  const syncAndSaveProducts = (updatedProducts) => {
+    setProducts(updatedProducts);
+    localStorage.setItem('wt_marketplace_products', JSON.stringify(updatedProducts));
+    saveCloudProducts(updatedProducts);
+  };
 
   const handleAdminLoginSuccess = () => {
     setIsAdminLoggedIn(true);
@@ -77,13 +98,14 @@ export function App() {
   // Save Product (Admin only)
   const handleSaveProduct = (productToSave) => {
     if (!isAdminLoggedIn) return;
-    setProducts((prev) => {
-      const exists = prev.some((p) => p.id === productToSave.id);
-      if (exists) {
-        return prev.map((p) => (p.id === productToSave.id ? productToSave : p));
-      }
-      return [productToSave, ...prev];
-    });
+    const exists = products.some((p) => p.id === productToSave.id);
+    let updated;
+    if (exists) {
+      updated = products.map((p) => (p.id === productToSave.id ? productToSave : p));
+    } else {
+      updated = [productToSave, ...products];
+    }
+    syncAndSaveProducts(updated);
     setEditingProduct(null);
   };
 
@@ -96,14 +118,15 @@ export function App() {
   const handleDeleteProduct = (productId) => {
     if (!isAdminLoggedIn) return;
     if (window.confirm('Are you sure you want to delete this account listing?')) {
-      setProducts((prev) => prev.filter((p) => p.id !== productId));
+      const updated = products.filter((p) => p.id !== productId);
+      syncAndSaveProducts(updated);
     }
   };
 
   const handleResetToDefaultProducts = () => {
     if (!isAdminLoggedIn) return;
     if (window.confirm('Reset catalog to initial sample products?')) {
-      setProducts(INITIAL_PRODUCTS);
+      syncAndSaveProducts(INITIAL_PRODUCTS);
       localStorage.removeItem('wt_marketplace_products');
     }
   };
