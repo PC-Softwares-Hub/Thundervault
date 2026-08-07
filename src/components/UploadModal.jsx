@@ -22,7 +22,6 @@ export const UploadModal = ({ isOpen, onClose, onSaveProduct, editingProduct, al
   const [images, setImages] = useState([]);
   const [imageUrlInput, setImageUrlInput] = useState('');
   const [dragActive, setDragActive] = useState(false);
-  const [copiedJson, setCopiedJson] = useState(false);
 
   useEffect(() => {
     if (editingProduct) {
@@ -131,13 +130,6 @@ export const UploadModal = ({ isOpen, onClose, onSaveProduct, editingProduct, al
     setTitle(DEFAULT_TITLE_EXAMPLE);
   };
 
-  const handleExportJsonForGitHub = () => {
-    const jsonStr = JSON.stringify(allProducts, null, 2);
-    navigator.clipboard.writeText(jsonStr);
-    setCopiedJson(true);
-    setTimeout(() => setCopiedJson(false), 3000);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title || !price) {
@@ -242,42 +234,16 @@ export const UploadModal = ({ isOpen, onClose, onSaveProduct, editingProduct, al
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {/* GitHub & Preset Toolbar */}
-          <div style={{
-            background: 'rgba(229,169,59,0.08)',
-            border: '1px dashed var(--border-gold)',
-            borderRadius: 'var(--radius-md)',
-            padding: '0.85rem 1rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem',
-            flexWrap: 'wrap'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <Sparkles size={18} color="#e5a93b" />
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-main)' }}>
-                <strong>Zero-Code GitHub/Netlify Publishing:</strong> Use local uploads or ImgBB links & Export JSON.
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button
-                type="button"
-                onClick={handleApplyPresetExample}
-                className="btn-outline-gold"
-                style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}
-              >
-                Fill Example Title
-              </button>
-              <button
-                type="button"
-                onClick={handleExportJsonForGitHub}
-                className="btn-secondary"
-                style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}
-              >
-                <Download size={13} /> {copiedJson ? 'JSON Copied!' : 'Export JSON for GitHub'}
-              </button>
-            </div>
+          {/* Quick Title Preset Helper */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button
+              type="button"
+              onClick={handleApplyPresetExample}
+              className="btn-outline-gold"
+              style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}
+            >
+              Fill Example Title
+            </button>
           </div>
 
           {/* Title Input */}

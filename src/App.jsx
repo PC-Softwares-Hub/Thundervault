@@ -186,11 +186,21 @@ export const handleBuyNowRedirect = (product) => {
       }
     }
 
+    // Robust Nation Filter Check (USA, USSR/Russia, Germany, Great Britain, Japan, China, Sweden)
     if (selectedNation !== 'All') {
-      if (selectedNation === 'USSR' && !(product.nation.includes('USSR') || product.nation.includes('Russia'))) {
-        return false;
-      } else if (selectedNation !== 'USSR' && product.nation !== selectedNation) {
-        return false;
+      const pNation = (product.nation || '').toLowerCase();
+      const pTitle = (product.title || '').toLowerCase();
+      const sel = selectedNation.toLowerCase();
+
+      if (sel.includes('ussr') || sel.includes('russia')) {
+        const isUssr = pNation.includes('ussr') || pNation.includes('russia') || pTitle.includes('ussr') || pTitle.includes('russia');
+        if (!isUssr) return false;
+      } else if (sel.includes('usa') || sel === 'us') {
+        const isUsa = pNation.includes('usa') || pNation.includes('us') || pTitle.includes('usa') || pTitle.includes('us rank') || pTitle.includes('us air') || pTitle.includes('us top tier');
+        if (!isUsa) return false;
+      } else {
+        const isMatch = pNation.includes(sel) || pTitle.includes(sel);
+        if (!isMatch) return false;
       }
     }
 
@@ -207,6 +217,20 @@ export const handleBuyNowRedirect = (product) => {
     }
 
     return true;
+  });
+
+  // Sort offers: Lowest price first + prioritize items on sale (-12% etc.)
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    const aOnSale = a.discountPercentage && a.discountPercentage > 0 ? 1 : 0;
+    const bOnSale = b.discountPercentage && b.discountPercentage > 0 ? 1 : 0;
+
+    // Prioritize items on sale
+    if (aOnSale !== bOnSale) {
+      return bOnSale - aOnSale;
+    }
+
+    // Then sort by lowest price first
+    return a.price - b.price;
   });
 
   return (
@@ -269,7 +293,7 @@ export const handleBuyNowRedirect = (product) => {
                     AVAILABLE WAR THUNDER ACCOUNTS
                   </h2>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    Showing <strong style={{ color: 'var(--accent-gold)' }}>{filteredProducts.length}</strong> verified account listings
+                    Showing <strong style={{ color: 'var(--accent-gold)' }}>{sortedProducts.length}</strong> verified account listings (Sorted by Lowest Price & Deals)
                   </div>
                 </div>
 
@@ -304,7 +328,7 @@ export const handleBuyNowRedirect = (product) => {
               </div>
 
               {/* Grid */}
-              {filteredProducts.length === 0 ? (
+              {sortedProducts.length === 0 ? (
                 <div className="glass-panel" style={{
                   borderRadius: 'var(--radius-lg)',
                   padding: '4rem 2rem',
@@ -327,7 +351,7 @@ export const handleBuyNowRedirect = (product) => {
                   gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
                   gap: '1.5rem'
                 }}>
-                  {filteredProducts.map((product) => (
+                  {sortedProducts.map((product) => (
                     <ProductCard
                       key={product.id}
                       product={product}
