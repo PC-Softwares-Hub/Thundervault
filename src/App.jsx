@@ -176,7 +176,7 @@ export const handleBuyNowRedirect = (product) => {
     setTimeout(() => setDownloadSuccessMessage(''), 6000);
   };
 
-  // Robust Nation & Attribute Filter Logic
+  // Robust & Accurate Nation Filtering
   const filteredProducts = products.filter((product) => {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -191,16 +191,21 @@ export const handleBuyNowRedirect = (product) => {
       }
     }
 
-    // Flexible Nation Filtering
+    // Precise Nation Filtering without substring collisions ('ussr' !== 'us')
     if (selectedNation !== 'All') {
-      const pNation = (product.nation || '').toLowerCase();
-      const pTitle = (product.title || '').toLowerCase();
+      const pNation = (product.nation || '').toLowerCase().trim();
+      const pTitle = (product.title || '').toLowerCase().trim();
 
       if (selectedNation === 'USSR') {
         const isUSSR = pNation.includes('ussr') || pNation.includes('russia') || pTitle.includes('ussr') || pTitle.includes('russia');
         if (!isUSSR) return false;
       } else if (selectedNation === 'USA') {
-        const isUSA = pNation.includes('usa') || pNation.includes('us') || pTitle.includes('usa') || pTitle.includes('us air') || pTitle.includes('us rank') || pTitle.includes('us top');
+        // Must NOT match USSR ('ussr' contains 'us', so we exclude 'ussr')
+        if (pNation.includes('ussr') || pTitle.includes('ussr')) return false;
+
+        const isUSA = pNation === 'usa' || pNation === 'us' || pNation.includes('usa') ||
+                      /\b(usa|us air|us ground|us tank|us rank|us top)\b/i.test(pTitle) ||
+                      pTitle.includes('us top tier') || pTitle.includes('us rank 8');
         if (!isUSA) return false;
       } else if (selectedNation === 'Germany') {
         const isGermany = pNation.includes('germany') || pNation.includes('german') || pTitle.includes('germany') || pTitle.includes('german');
@@ -331,27 +336,37 @@ export const handleBuyNowRedirect = (product) => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                  {/* Sort Dropdown Selector */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--bg-input)', padding: '0.35rem 0.65rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                    <ArrowUpDown size={14} color="var(--accent-gold)" />
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>SORT:</span>
+                  {/* Styled Dark Theme Sort Dropdown */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    background: '#111622',
+                    padding: '0.4rem 0.75rem',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--border-gold)',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+                  }}>
+                    <ArrowUpDown size={14} color="#f59e0b" />
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700' }}>SORT:</span>
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
+                      className="dark-dropdown"
                       style={{
-                        background: 'none',
+                        background: '#111622',
                         border: 'none',
-                        color: 'var(--text-bright)',
+                        color: 'var(--accent-gold-light)',
                         fontSize: '0.775rem',
                         fontWeight: '700',
                         outline: 'none',
                         cursor: 'pointer'
                       }}
                     >
-                      <option value="sale_price_asc">🔥 On Sale First & Lowest Price</option>
-                      <option value="price_asc">💲 Lowest Price First</option>
-                      <option value="discount_desc">🏷️ Highest Discount First</option>
-                      <option value="price_desc">💎 Highest Price First</option>
+                      <option value="sale_price_asc" style={{ background: '#161b26', color: '#f59e0b' }}>🔥 On Sale First & Lowest Price</option>
+                      <option value="price_asc" style={{ background: '#161b26', color: '#38bdf8' }}>💲 Lowest Price First</option>
+                      <option value="discount_desc" style={{ background: '#161b26', color: '#f87171' }}>🏷️ Highest Discount First</option>
+                      <option value="price_desc" style={{ background: '#161b26', color: '#c084fc' }}>💎 Highest Price First</option>
                     </select>
                   </div>
 

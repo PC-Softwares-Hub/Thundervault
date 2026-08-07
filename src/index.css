@@ -97,6 +97,19 @@ button {
   outline: none;
 }
 
+/* Dark Theme Dropdown Select Styling */
+select {
+  background-color: #161b26 !important;
+  color: var(--text-bright) !important;
+  border-radius: var(--radius-sm);
+}
+
+select option {
+  background-color: #161b26 !important;
+  color: var(--text-bright) !important;
+  padding: 0.5rem;
+}
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
