@@ -273,7 +273,7 @@ export const handleBuyNowRedirect = (product) => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Navbar with 4 Navigation Tabs */}
+      {/* Navbar with Separate Tabs */}
       <Navbar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -288,7 +288,7 @@ export const handleBuyNowRedirect = (product) => {
         onAdminLogout={handleAdminLogout}
       />
 
-      {/* Main Tab Render Switcher */}
+      {/* Tab 1: Accounts Catalog Only */}
       {activeTab === 'products' && (
         <>
           <Hero
@@ -313,11 +313,8 @@ export const handleBuyNowRedirect = (product) => {
               onReset={handleResetFilters}
             />
 
-            {/* Main Content Area */}
+            {/* Account Listings Area */}
             <div>
-              {/* Prominent Power Boosting Service Highlight Banner */}
-              <BoostingSection />
-
               {/* Header Controls */}
               <div style={{
                 display: 'flex',
@@ -404,7 +401,7 @@ export const handleBuyNowRedirect = (product) => {
                 </div>
               </div>
 
-              {/* Grid */}
+              {/* Account Cards Grid */}
               {sortedProducts.length === 0 ? (
                 <div className="glass-panel" style={{
                   borderRadius: 'var(--radius-lg)',
@@ -489,19 +486,19 @@ export const handleBuyNowRedirect = (product) => {
         </>
       )}
 
-      {/* Standalone Boosting Page */}
+      {/* Tab 2: Standalone Power Boosting Services Only */}
       {activeTab === 'boosting' && (
-        <main className="container" style={{ padding: '3rem 1.5rem', minHeight: '60vh' }}>
+        <main className="container" style={{ padding: '3rem 1.5rem', minHeight: '65vh' }}>
           <BoostingSection />
         </main>
       )}
 
-      {/* Reviews & Trust Tab Page */}
+      {/* Tab 3: Reviews & Trust Page Only */}
       {activeTab === 'reviews' && (
         <TrustSection />
       )}
 
-      {/* Discord Hub Tab Page */}
+      {/* Tab 4: Discord Hub Page Only */}
       {activeTab === 'discord' && (
         <DiscordSection />
       )}
