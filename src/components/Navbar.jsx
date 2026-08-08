@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShoppingBag, ShieldCheck, MessageSquare, PlusCircle, ExternalLink, Menu, X, Star, Lock, LogOut } from 'lucide-react';
+import { Search, ShoppingBag, ShieldCheck, MessageSquare, PlusCircle, ExternalLink, Menu, X, Star, Lock, LogOut, Rocket } from 'lucide-react';
 import { DISCORD_SERVER_LINK } from '../data/initialProducts';
 
 export const Navbar = ({
@@ -80,37 +80,45 @@ export const Navbar = ({
           </div>
         </div>
 
-        {/* Desktop 3 Navigation Tabs */}
-        <nav className="desktop-nav-links" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {/* Desktop Navigation Tabs */}
+        <nav className="desktop-nav-links" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
           <button
             onClick={() => setActiveTab('products')}
             className={activeTab === 'products' ? 'btn-primary' : 'btn-secondary'}
-            style={{ fontSize: '0.85rem', padding: '0.55rem 1.1rem' }}
+            style={{ fontSize: '0.825rem', padding: '0.5rem 0.95rem' }}
           >
-            <ShoppingBag size={16} /> Products
+            <ShoppingBag size={15} /> Accounts Catalog
+          </button>
+
+          <button
+            onClick={() => setActiveTab('boosting')}
+            className={activeTab === 'boosting' ? 'btn-primary' : 'btn-secondary'}
+            style={{ fontSize: '0.825rem', padding: '0.5rem 0.95rem' }}
+          >
+            <Rocket size={15} /> 100k RP Boosting
           </button>
 
           <button
             onClick={() => setActiveTab('reviews')}
             className={activeTab === 'reviews' ? 'btn-primary' : 'btn-secondary'}
-            style={{ fontSize: '0.85rem', padding: '0.55rem 1.1rem' }}
+            style={{ fontSize: '0.825rem', padding: '0.5rem 0.95rem' }}
           >
-            <Star size={16} fill={activeTab === 'reviews' ? '#000' : 'none'} /> Reviews & Trust
+            <Star size={15} fill={activeTab === 'reviews' ? '#000' : 'none'} /> Reviews & Trust
           </button>
 
           <button
             onClick={() => setActiveTab('discord')}
             className={activeTab === 'discord' ? 'btn-primary' : 'btn-secondary'}
-            style={{ fontSize: '0.85rem', padding: '0.55rem 1.1rem' }}
+            style={{ fontSize: '0.825rem', padding: '0.5rem 0.95rem' }}
           >
-            <MessageSquare size={16} /> Discord Server
+            <MessageSquare size={15} /> Discord Server
           </button>
         </nav>
 
         {/* Search Bar & Action Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           {/* Desktop Search Box */}
-          <div className="desktop-search-input" style={{ position: 'relative', width: '240px' }}>
+          <div className="desktop-search-input" style={{ position: 'relative', width: '220px' }}>
             <Search size={15} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
             <input
               type="text"
@@ -122,9 +130,9 @@ export const Navbar = ({
                 background: 'var(--bg-input)',
                 border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-md)',
-                padding: '0.55rem 1rem 0.55rem 2.3rem',
+                padding: '0.5rem 1rem 0.5rem 2.3rem',
                 color: 'var(--text-bright)',
-                fontSize: '0.825rem',
+                fontSize: '0.8rem',
                 outline: 'none'
               }}
             />
@@ -258,7 +266,14 @@ export const Navbar = ({
             className={activeTab === 'products' ? 'btn-primary' : 'btn-secondary'}
             style={{ width: '100%', justifyContent: 'flex-start' }}
           >
-            🛒 Products Catalog
+            🛒 Accounts Catalog
+          </button>
+          <button
+            onClick={() => { setActiveTab('boosting'); setIsMobileMenuOpen(false); }}
+            className={activeTab === 'boosting' ? 'btn-primary' : 'btn-secondary'}
+            style={{ width: '100%', justifyContent: 'flex-start' }}
+          >
+            🚀 100k RP Power Boosting
           </button>
           <button
             onClick={() => { setActiveTab('reviews'); setIsMobileMenuOpen(false); }}

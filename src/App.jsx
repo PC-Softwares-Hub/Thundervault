@@ -3,13 +3,14 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TrustSection } from './components/TrustSection';
 import { DiscordSection } from './components/DiscordSection';
+import { BoostingSection } from './components/BoostingSection';
 import { FilterSidebar } from './components/FilterSidebar';
 import { ProductCard } from './components/ProductCard';
 import { ProductModal } from './components/ProductModal';
 import { UploadModal } from './components/UploadModal';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { INITIAL_PRODUCTS, DISCORD_SERVER_LINK } from './data/initialProducts';
-import { MessageSquare, ShieldCheck, PlusCircle, RefreshCw, ExternalLink, Lock, ShieldAlert, Check, ShoppingBag, Star, Download, Save, ArrowUpDown } from 'lucide-react';
+import { MessageSquare, ShieldCheck, PlusCircle, RefreshCw, ExternalLink, Lock, ShieldAlert, Check, ShoppingBag, Star, Download, Save, ArrowUpDown, Rocket } from 'lucide-react';
 
 export function App() {
   const [products, setProducts] = useState(() => {
@@ -24,7 +25,7 @@ export function App() {
     return INITIAL_PRODUCTS;
   });
 
-  // Navigation tab state ('products' | 'reviews' | 'discord')
+  // Navigation tab state ('products' | 'boosting' | 'reviews' | 'discord')
   const [activeTab, setActiveTab] = useState('products');
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -272,7 +273,7 @@ export const handleBuyNowRedirect = (product) => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Navbar with 3 Tabs & 3-Dash Menu */}
+      {/* Navbar with 4 Navigation Tabs */}
       <Navbar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -312,8 +313,11 @@ export const handleBuyNowRedirect = (product) => {
               onReset={handleResetFilters}
             />
 
-            {/* Listings Grid Section */}
+            {/* Main Content Area */}
             <div>
+              {/* Prominent Power Boosting Service Highlight Banner */}
+              <BoostingSection />
+
               {/* Header Controls */}
               <div style={{
                 display: 'flex',
@@ -485,6 +489,13 @@ export const handleBuyNowRedirect = (product) => {
         </>
       )}
 
+      {/* Standalone Boosting Page */}
+      {activeTab === 'boosting' && (
+        <main className="container" style={{ padding: '3rem 1.5rem', minHeight: '60vh' }}>
+          <BoostingSection />
+        </main>
+      )}
+
       {/* Reviews & Trust Tab Page */}
       {activeTab === 'reviews' && (
         <TrustSection />
@@ -513,7 +524,7 @@ export const handleBuyNowRedirect = (product) => {
               THUNDER<span className="gold-gradient-text">VAULT</span> MARKETPLACE
             </div>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, maxWidth: '400px' }}>
-              The premier marketplace for verified War Thunder accounts. Top tier jets Su-30SM2, MiG-29 (9-12), Su-25K, Rank IX Air, and millions of Silver Lions with full native email access.
+              The premier marketplace for verified War Thunder accounts and 100k RP power boosting. Top tier jets Su-30SM2, MiG-29 (9-12), Su-25K, Rank IX Air, and millions of Silver Lions with full native email access.
             </p>
           </div>
 
@@ -521,7 +532,10 @@ export const handleBuyNowRedirect = (product) => {
             <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem', color: 'var(--text-bright)' }}>NAVIGATION TABS</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem' }}>
               <span onClick={() => setActiveTab('products')} style={{ cursor: 'pointer', color: activeTab === 'products' ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
-                🛒 Products Catalog
+                🛒 Accounts Catalog
+              </span>
+              <span onClick={() => setActiveTab('boosting')} style={{ cursor: 'pointer', color: activeTab === 'boosting' ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
+                🚀 100k RP Boosting ($5)
               </span>
               <span onClick={() => setActiveTab('reviews')} style={{ cursor: 'pointer', color: activeTab === 'reviews' ? 'var(--accent-cyan)' : 'var(--text-muted)' }}>
                 ⭐ My Reviews & Trust
