@@ -64,8 +64,8 @@ body {
 
 /* Custom Eye-Comfort Scrollbar */
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg-primary);
@@ -116,7 +116,7 @@ select option {
   padding: 0 1.5rem;
 }
 
-/* Vibrant Metallic Gradient Text */
+/* Metallic Gradient Text */
 .gold-gradient-text {
   background: linear-gradient(135deg, #ffffff 10%, #fde047 50%, var(--accent-gold) 100%);
   -webkit-background-clip: text;
@@ -269,7 +269,7 @@ select option {
   transform: translateY(-1px);
 }
 
-/* Smooth Fade In Animation */
+/* Fade In Animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -277,4 +277,79 @@ select option {
 
 .animate-fade-in {
   animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVENESS (MAX-WIDTH: 900px & 600px)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  /* Main Grid Stack */
+  .main-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  /* Mobile Navbar Controls */
+  .desktop-nav-links {
+    display: none !important;
+  }
+
+  .desktop-search-input {
+    display: none !important;
+  }
+
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+
+  /* Hero Section Mobile Scaling */
+  .hero-heading {
+    font-size: 1.8rem !important;
+  }
+
+  .hero-subheading {
+    font-size: 0.85rem !important;
+  }
+
+  .hero-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Product Modal Responsive Grid */
+  .modal-grid-container {
+    grid-template-columns: 1fr !important;
+    max-height: 95vh !important;
+  }
+
+  .modal-left-gallery {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+  }
+
+  /* Footer Responsive Grid */
+  footer .container {
+    grid-template-columns: 1fr !important;
+    gap: 1.75rem !important;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Product Cards Single Column */
+  .products-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .card-action-buttons {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Filter Sidebar Collapse Toggle */
+  .filter-sidebar-container {
+    padding: 1rem !important;
+  }
 }

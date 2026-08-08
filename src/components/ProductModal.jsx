@@ -42,10 +42,10 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1.5rem',
+        padding: '1rem',
         overflowY: 'auto'
       }}>
-        <div className="glass-panel animate-fade-in" style={{
+        <div className="glass-panel modal-grid-container animate-fade-in" style={{
           width: '100%',
           maxWidth: '1050px',
           maxHeight: '90vh',
@@ -62,10 +62,10 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
             onClick={onClose}
             style={{
               position: 'absolute',
-              top: '16px',
-              right: '16px',
+              top: '12px',
+              right: '12px',
               zIndex: 10,
-              background: 'rgba(0,0,0,0.6)',
+              background: 'rgba(0,0,0,0.75)',
               border: '1px solid var(--border-medium)',
               color: '#fff',
               width: '36px',
@@ -81,9 +81,9 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
           </button>
 
           {/* Left Side: Photo Lightbox Gallery */}
-          <div style={{
+          <div className="modal-left-gallery" style={{
             background: '#07090e',
-            padding: '1.5rem',
+            padding: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
@@ -95,7 +95,7 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
               onClick={() => setIsFullscreenLightboxOpen(true)}
               style={{
                 position: 'relative',
-                height: '380px',
+                height: '320px',
                 width: '100%',
                 borderRadius: 'var(--radius-md)',
                 overflow: 'hidden',
@@ -125,21 +125,21 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
               {/* Hover Zoom Hint Badge */}
               <div style={{
                 position: 'absolute',
-                top: '12px',
-                left: '12px',
+                top: '10px',
+                left: '10px',
                 background: 'rgba(0,0,0,0.75)',
                 color: 'var(--accent-gold-light)',
                 border: '1px solid var(--border-gold)',
-                fontSize: '0.75rem',
+                fontSize: '0.7rem',
                 fontWeight: '700',
-                padding: '0.3rem 0.7rem',
+                padding: '0.25rem 0.6rem',
                 borderRadius: 'var(--radius-sm)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem',
+                gap: '0.35rem',
                 backdropFilter: 'blur(4px)'
               }}>
-                <ZoomIn size={14} /> Click Image to Zoom Fullscreen
+                <ZoomIn size={13} /> Click Image to Zoom Fullscreen
               </div>
 
               {/* Gallery Navigation Arrows */}
@@ -152,21 +152,21 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
                     }}
                     style={{
                       position: 'absolute',
-                      left: '10px',
+                      left: '8px',
                       top: '50%',
                       transform: 'translateY(-50%)',
                       background: 'rgba(0,0,0,0.65)',
                       color: '#fff',
                       border: '1px solid var(--border-medium)',
                       borderRadius: '50%',
-                      width: '36px',
-                      height: '36px',
+                      width: '34px',
+                      height: '34px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <ChevronLeft size={20} />
+                    <ChevronLeft size={18} />
                   </button>
                   <button
                     onClick={(e) => {
@@ -175,21 +175,21 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
                     }}
                     style={{
                       position: 'absolute',
-                      right: '10px',
+                      right: '8px',
                       top: '50%',
                       transform: 'translateY(-50%)',
                       background: 'rgba(0,0,0,0.65)',
                       color: '#fff',
                       border: '1px solid var(--border-medium)',
                       borderRadius: '50%',
-                      width: '36px',
-                      height: '36px',
+                      width: '34px',
+                      height: '34px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <ChevronRight size={20} />
+                    <ChevronRight size={18} />
                   </button>
                 </>
               )}
@@ -197,19 +197,19 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
               {/* Photo Counter */}
               <div style={{
                 position: 'absolute',
-                bottom: '12px',
-                right: '12px',
+                bottom: '10px',
+                right: '10px',
                 background: 'rgba(0,0,0,0.75)',
                 color: 'var(--text-bright)',
-                fontSize: '0.75rem',
+                fontSize: '0.7rem',
                 fontWeight: '700',
-                padding: '0.25rem 0.65rem',
+                padding: '0.2rem 0.55rem',
                 borderRadius: 'var(--radius-sm)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.35rem'
+                gap: '0.3rem'
               }}>
-                <Camera size={13} /> {activeImageIndex + 1} / {images.length}
+                <Camera size={12} /> {activeImageIndex + 1} / {images.length}
               </div>
             </div>
 
@@ -226,8 +226,8 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
                     style={{
-                      width: '70px',
-                      height: '50px',
+                      width: '65px',
+                      height: '46px',
                       borderRadius: 'var(--radius-sm)',
                       overflow: 'hidden',
                       border: activeImageIndex === idx ? '2px solid var(--accent-gold)' : '1px solid var(--border-subtle)',
@@ -256,15 +256,15 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
               background: 'rgba(16, 185, 129, 0.08)',
               border: '1px solid rgba(16, 185, 129, 0.25)',
               borderRadius: 'var(--radius-md)',
-              padding: '0.85rem 1rem',
+              padding: '0.75rem 0.9rem',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.75rem'
+              gap: '0.65rem'
             }}>
-              <ShieldCheck size={26} color="#34d399" />
+              <ShieldCheck size={24} color="#34d399" />
               <div>
-                <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#34d399' }}>VERIFIED ACCOUNT GUARANTEE</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: '700', color: '#34d399' }}>VERIFIED ACCOUNT GUARANTEE</div>
+                <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
                   Full native email credentials handed over upon purchase on Discord.
                 </div>
               </div>
@@ -273,26 +273,17 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
 
           {/* Right Side: Account Details & Discord Buy Button */}
           <div style={{
-            padding: '1.75rem',
+            padding: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            gap: '1.25rem'
+            gap: '1rem'
           }}>
             <div>
-              {/* Badges */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.75rem' }}>
-                {parsedBadges.map((badge, idx) => (
-                  <span key={idx} className={`badge badge-${badge.type}`}>
-                    {badge.label}
-                  </span>
-                ))}
-              </div>
-
               {/* Title & Copy */}
-              <div style={{ position: 'relative', marginBottom: '1rem' }}>
+              <div style={{ position: 'relative', marginBottom: '0.85rem' }}>
                 <h2 style={{
-                  fontSize: '1.2rem',
+                  fontSize: '1.1rem',
                   fontWeight: '700',
                   lineHeight: 1.35,
                   color: 'var(--text-bright)',
@@ -310,13 +301,13 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
                     background: 'rgba(255,255,255,0.06)',
                     border: '1px solid var(--border-subtle)',
                     color: 'var(--text-muted)',
-                    padding: '0.4rem',
+                    padding: '0.35rem',
                     borderRadius: 'var(--radius-sm)',
                     cursor: 'pointer'
                   }}
                   title="Copy Title"
                 >
-                  {copiedTitle ? <Check size={16} color="#34d399" /> : <Copy size={16} />}
+                  {copiedTitle ? <Check size={15} color="#34d399" /> : <Copy size={15} />}
                 </button>
               </div>
 
@@ -331,10 +322,10 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
                   background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%)',
                   border: '1px solid var(--border-gold)',
                   borderRadius: 'var(--radius-md)',
-                  padding: '0.65rem 1rem',
-                  marginBottom: '1.25rem',
+                  padding: '0.55rem 0.85rem',
+                  marginBottom: '1rem',
                   color: 'var(--accent-gold-light)',
-                  fontSize: '0.825rem',
+                  fontSize: '0.775rem',
                   fontWeight: '800',
                   letterSpacing: '0.03em',
                   display: 'flex',
@@ -347,11 +338,11 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
                 }}
                 title="Check Verified Seller Reviews on PlayerAuctions & Eldorado"
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Star size={15} fill="#fbbf24" color="#fbbf24" />
-                  <span>100% TRUSTED SELLER • CHECK REVIEWS TAB</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <Star size={14} fill="#fbbf24" color="#fbbf24" />
+                  <span>100% TRUSTED SELLER • CHECK REVIEWS</span>
                 </div>
-                <ArrowRight size={16} />
+                <ArrowRight size={15} />
               </button>
 
               {/* Price Tag Box */}
@@ -359,20 +350,20 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
                 background: 'var(--bg-input)',
                 border: '1px solid var(--border-medium)',
                 borderRadius: 'var(--radius-md)',
-                padding: '0.85rem 1.25rem',
+                padding: '0.75rem 1rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginBottom: '1.25rem'
+                marginBottom: '1rem'
               }}>
                 <div>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>TOTAL PRICE</span>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '2rem', fontWeight: '800', fontFamily: 'var(--font-heading)', color: '#fff' }}>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>TOTAL PRICE</span>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem' }}>
+                    <span style={{ fontSize: '1.75rem', fontWeight: '800', fontFamily: 'var(--font-heading)', color: '#fff' }}>
                       ${product.price}
                     </span>
                     {product.originalPrice && product.originalPrice > product.price && (
-                      <span style={{ fontSize: '1rem', color: 'var(--text-dim)', textDecoration: 'line-through' }}>
+                      <span style={{ fontSize: '0.9rem', color: 'var(--text-dim)', textDecoration: 'line-through' }}>
                         ${product.originalPrice}
                       </span>
                     )}
@@ -380,7 +371,7 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
                 </div>
 
                 {product.discountPercentage > 0 && (
-                  <div className="badge badge-red" style={{ fontSize: '0.85rem', padding: '0.4rem 0.8rem' }}>
+                  <div className="badge badge-red" style={{ fontSize: '0.8rem', padding: '0.35rem 0.7rem' }}>
                     SAVE {product.discountPercentage}%
                   </div>
                 )}
@@ -390,36 +381,36 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
-                gap: '0.75rem',
-                marginBottom: '1.25rem'
+                gap: '0.6rem',
+                marginBottom: '1rem'
               }}>
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>NATION</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-bright)' }}>{product.nation}</span>
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.55rem 0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>NATION</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-bright)' }}>{product.nation}</span>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>BRANCH & RANK</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--accent-purple)' }}>{product.branch} ({product.rank})</span>
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.55rem 0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>BRANCH & RANK</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--accent-purple)' }}>{product.branch} ({product.rank})</span>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>SILVER LIONS</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#f5bc54' }}>{product.silverLions} SL</span>
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.55rem 0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>SILVER LIONS</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#f5bc54' }}>{product.silverLions} SL</span>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>ACCESS LEVEL</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#34d399' }}>{product.accessType}</span>
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '0.55rem 0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>ACCESS LEVEL</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#34d399' }}>{product.accessType}</span>
                 </div>
               </div>
 
               {/* Featured Vehicles */}
               {product.featuredVehicles && product.featuredVehicles.length > 0 && (
-                <div style={{ marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', display: 'block', marginBottom: '0.4rem', textTransform: 'uppercase' }}>
+                <div style={{ marginBottom: '0.85rem' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', display: 'block', marginBottom: '0.35rem', textTransform: 'uppercase' }}>
                     UNLOCKED VEHICLES / JETS
                   </span>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
                     {product.featuredVehicles.map((v, i) => (
-                      <span key={i} className="badge badge-gold" style={{ fontSize: '0.75rem' }}>
+                      <span key={i} className="badge badge-gold" style={{ fontSize: '0.725rem' }}>
                         ⚡ {v}
                       </span>
                     ))}
@@ -428,28 +419,28 @@ export const ProductModal = ({ product, onClose, onOpenReviews }) => {
               )}
 
               {/* Description */}
-              <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1rem' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: '0.85rem' }}>
                 {product.description}
               </div>
             </div>
 
             {/* Discord Direct Buy Button */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <button
                 onClick={() => handleBuyNowRedirect(product)}
                 className="btn-primary"
                 style={{
-                  padding: '0.9rem',
-                  fontSize: '1rem',
+                  padding: '0.8rem',
+                  fontSize: '0.95rem',
                   background: 'linear-gradient(135deg, #5865F2 0%, #4752C4 100%)',
                   color: '#fff',
-                  boxShadow: '0 4px 20px rgba(88, 101, 242, 0.4)'
+                  boxShadow: '0 4px 18px rgba(88, 101, 242, 0.4)'
                 }}
               >
-                <MessageSquare size={20} /> BUY NOW ON DISCORD SERVER
+                <MessageSquare size={18} /> BUY NOW ON DISCORD SERVER
               </button>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textAlign: 'center' }}>
-                ⚡ Redirects to <strong style={{ color: '#5865F2' }}>discord.gg/ppJV324MR9</strong> & copies account info to clipboard.
+              <div style={{ fontSize: '0.725rem', color: 'var(--text-dim)', textAlign: 'center' }}>
+                ⚡ Redirects to <strong style={{ color: '#5865F2' }}>discord.gg/ppJV324MR9</strong> & copies info to clipboard.
               </div>
             </div>
           </div>

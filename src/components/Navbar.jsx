@@ -13,13 +13,14 @@ export const Navbar = ({
   onAdminLogout
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   return (
     <header style={{
       position: 'sticky',
       top: 0,
       zIndex: 40,
-      background: 'rgba(13, 17, 23, 0.92)',
+      background: 'rgba(13, 17, 23, 0.94)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
       borderBottom: '1px solid var(--border-subtle)'
@@ -33,17 +34,20 @@ export const Navbar = ({
       }}>
         {/* Logo */}
         <div
-          onClick={() => setActiveTab('products')}
+          onClick={() => {
+            setActiveTab('products');
+            setIsMobileMenuOpen(false);
+          }}
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.75rem',
+            gap: '0.65rem',
             cursor: 'pointer'
           }}
         >
           <div style={{
-            width: '42px',
-            height: '42px',
+            width: '38px',
+            height: '38px',
             borderRadius: 'var(--radius-md)',
             background: 'linear-gradient(135deg, rgba(245,158,11,0.2) 0%, rgba(245,158,11,0.05) 100%)',
             border: '1px solid var(--border-gold)',
@@ -52,13 +56,13 @@ export const Navbar = ({
             justifyContent: 'center',
             boxShadow: 'var(--shadow-glow-gold)'
           }}>
-            <ShieldCheck size={26} color="#f59e0b" />
+            <ShieldCheck size={22} color="#f59e0b" />
           </div>
 
           <div>
             <div style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '1.5rem',
+              fontSize: '1.35rem',
               fontWeight: '700',
               lineHeight: 1,
               letterSpacing: '0.05em'
@@ -66,9 +70,9 @@ export const Navbar = ({
               THUNDER<span className="gold-gradient-text">VAULT</span>
             </div>
             <div style={{
-              fontSize: '0.68rem',
+              fontSize: '0.625rem',
               color: 'var(--text-muted)',
-              letterSpacing: '0.12em',
+              letterSpacing: '0.1em',
               fontWeight: '600'
             }}>
               WAR THUNDER MARKETPLACE
@@ -77,7 +81,7 @@ export const Navbar = ({
         </div>
 
         {/* Desktop 3 Navigation Tabs */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <nav className="desktop-nav-links" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <button
             onClick={() => setActiveTab('products')}
             className={activeTab === 'products' ? 'btn-primary' : 'btn-secondary'}
@@ -104,13 +108,13 @@ export const Navbar = ({
         </nav>
 
         {/* Search Bar & Action Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {/* Search Box */}
-          <div style={{ position: 'relative', width: '260px' }}>
-            <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          {/* Desktop Search Box */}
+          <div className="desktop-search-input" style={{ position: 'relative', width: '240px' }}>
+            <Search size={15} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
             <input
               type="text"
-              placeholder="Search Su-30SM2, MiG-29, Rank IX..."
+              placeholder="Search Su-30SM2, MiG-29..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
@@ -118,11 +122,10 @@ export const Navbar = ({
                 background: 'var(--bg-input)',
                 border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-md)',
-                padding: '0.55rem 1rem 0.55rem 2.4rem',
+                padding: '0.55rem 1rem 0.55rem 2.3rem',
                 color: 'var(--text-bright)',
-                fontSize: '0.85rem',
-                outline: 'none',
-                transition: 'all 0.2s ease'
+                fontSize: '0.825rem',
+                outline: 'none'
               }}
             />
             {searchQuery && (
@@ -144,64 +147,111 @@ export const Navbar = ({
             )}
           </div>
 
+          {/* Mobile Search Toggle Icon */}
+          <button
+            onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid var(--border-medium)',
+              color: '#fff',
+              padding: '0.45rem',
+              borderRadius: 'var(--radius-sm)',
+              cursor: 'pointer',
+              display: 'none'
+            }}
+            className="mobile-menu-btn"
+            title="Search"
+          >
+            <Search size={18} />
+          </button>
+
           {/* Owner Admin Login / Logout */}
           {isAdminLoggedIn ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <button
                 onClick={onOpenUploadModal}
                 className="btn-primary"
-                style={{ fontSize: '0.8rem', padding: '0.5rem 0.9rem' }}
+                style={{ fontSize: '0.75rem', padding: '0.45rem 0.75rem' }}
               >
-                <PlusCircle size={15} /> Upload Account
+                <PlusCircle size={14} /> Upload
               </button>
               <button
                 onClick={onAdminLogout}
                 className="btn-secondary"
-                style={{ fontSize: '0.75rem', padding: '0.5rem 0.75rem', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)' }}
+                style={{ fontSize: '0.75rem', padding: '0.45rem 0.65rem', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)' }}
                 title="Logout Owner"
               >
-                <LogOut size={14} /> Logout
+                <LogOut size={13} />
               </button>
             </div>
           ) : (
             <button
               onClick={onOpenAdminLogin}
               className="btn-secondary"
-              style={{ fontSize: '0.75rem', padding: '0.55rem 0.85rem', color: 'var(--text-muted)' }}
+              style={{ fontSize: '0.75rem', padding: '0.45rem 0.7rem', color: 'var(--text-muted)' }}
               title="Owner Admin Login"
             >
               <Lock size={13} /> Owner
             </button>
           )}
 
-          {/* Mobile 3-Dash Menu Button */}
+          {/* Mobile 3-Dash Menu Toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             style={{
               background: 'rgba(255,255,255,0.06)',
               border: '1px solid var(--border-medium)',
               color: '#fff',
-              padding: '0.5rem',
+              padding: '0.45rem',
               borderRadius: 'var(--radius-sm)',
-              display: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              display: 'none'
             }}
             className="mobile-menu-btn"
+            title="Menu"
           >
-            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Search Bar Dropdown */}
+      {isMobileSearchOpen && (
+        <div style={{
+          background: 'var(--bg-secondary)',
+          padding: '0.75rem 1rem',
+          borderBottom: '1px solid var(--border-subtle)',
+          position: 'relative'
+        }}>
+          <input
+            type="text"
+            placeholder="Search Su-30SM2, MiG-29, Rank IX..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            autoFocus
+            style={{
+              width: '100%',
+              background: 'var(--bg-input)',
+              border: '1px solid var(--border-gold)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '0.6rem 1rem',
+              color: 'var(--text-bright)',
+              fontSize: '0.85rem',
+              outline: 'none'
+            }}
+          />
+        </div>
+      )}
+
+      {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
         <div style={{
           background: 'var(--bg-secondary)',
           borderBottom: '1px solid var(--border-subtle)',
-          padding: '1.25rem',
+          padding: '1rem',
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.75rem'
+          gap: '0.65rem'
         }}>
           <button
             onClick={() => { setActiveTab('products'); setIsMobileMenuOpen(false); }}

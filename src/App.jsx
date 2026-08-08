@@ -296,7 +296,7 @@ export const handleBuyNowRedirect = (product) => {
             onOpenReviews={() => setActiveTab('reviews')}
           />
 
-          <main className="container" style={{ flex: 1, padding: '2.5rem 1.5rem', display: 'grid', gridTemplateColumns: '280px 1fr', gap: '2rem' }}>
+          <main className="container main-layout-grid" style={{ flex: 1, padding: '2rem 1.5rem', display: 'grid', gridTemplateColumns: '280px 1fr', gap: '2rem' }}>
             {/* Sidebar Filters */}
             <FilterSidebar
               selectedNation={selectedNation}
@@ -328,7 +328,7 @@ export const handleBuyNowRedirect = (product) => {
                 gap: '0.75rem'
               }}>
                 <div>
-                  <h2 style={{ fontSize: '1.2rem', margin: 0, color: 'var(--text-bright)' }}>
+                  <h2 style={{ fontSize: '1.1rem', margin: 0, color: 'var(--text-bright)' }}>
                     AVAILABLE WAR THUNDER ACCOUNTS
                   </h2>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
@@ -336,20 +336,20 @@ export const handleBuyNowRedirect = (product) => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center', flexWrap: 'wrap' }}>
                   {/* Styled Dark Theme Sort Dropdown */}
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.4rem',
+                    gap: '0.35rem',
                     background: '#111622',
-                    padding: '0.4rem 0.75rem',
+                    padding: '0.4rem 0.65rem',
                     borderRadius: 'var(--radius-sm)',
                     border: '1px solid var(--border-gold)',
                     boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
                   }}>
                     <ArrowUpDown size={14} color="#f59e0b" />
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700' }}>SORT:</span>
+                    <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700' }}>SORT:</span>
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
@@ -358,7 +358,7 @@ export const handleBuyNowRedirect = (product) => {
                         background: '#111622',
                         border: 'none',
                         color: 'var(--accent-gold-light)',
-                        fontSize: '0.775rem',
+                        fontSize: '0.75rem',
                         fontWeight: '700',
                         outline: 'none',
                         cursor: 'pointer'
@@ -419,9 +419,9 @@ export const handleBuyNowRedirect = (product) => {
                   </button>
                 </div>
               ) : (
-                <div style={{
+                <div className="products-grid" style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
                   gap: '1.5rem'
                 }}>
                   {sortedProducts.map((product) => (
