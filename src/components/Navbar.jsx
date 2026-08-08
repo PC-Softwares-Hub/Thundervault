@@ -87,7 +87,7 @@ export const Navbar = ({
             className={activeTab === 'products' ? 'btn-primary' : 'btn-secondary'}
             style={{ fontSize: '0.825rem', padding: '0.5rem 0.95rem' }}
           >
-            <ShoppingBag size={15} /> Accounts Catalog
+            <ShoppingBag size={15} /> Accounts
           </button>
 
           <button
@@ -95,7 +95,7 @@ export const Navbar = ({
             className={activeTab === 'boosting' ? 'btn-primary' : 'btn-secondary'}
             style={{ fontSize: '0.825rem', padding: '0.5rem 0.95rem' }}
           >
-            <Rocket size={15} /> 100k RP Boosting
+            <Rocket size={15} /> RP Boosting
           </button>
 
           <button
@@ -266,14 +266,14 @@ export const Navbar = ({
             className={activeTab === 'products' ? 'btn-primary' : 'btn-secondary'}
             style={{ width: '100%', justifyContent: 'flex-start' }}
           >
-            🛒 Accounts Catalog
+            🛒 Accounts
           </button>
           <button
             onClick={() => { setActiveTab('boosting'); setIsMobileMenuOpen(false); }}
             className={activeTab === 'boosting' ? 'btn-primary' : 'btn-secondary'}
             style={{ width: '100%', justifyContent: 'flex-start' }}
           >
-            🚀 100k RP Power Boosting
+            🚀 RP Boosting
           </button>
           <button
             onClick={() => { setActiveTab('reviews'); setIsMobileMenuOpen(false); }}
