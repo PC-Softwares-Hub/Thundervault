@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Zap, Coins, Crosshair, Trash2, Edit3, Eye, ChevronLeft, ChevronRight, Star, ArrowRight } from 'lucide-react';
-import { parseTitleTags, handleBuyNowRedirect, FALLBACK_ACCOUNT_IMAGE } from '../data/initialProducts';
+import { handleBuyNowRedirect, FALLBACK_ACCOUNT_IMAGE } from '../data/initialProducts';
 
 export const ProductCard = ({
   product,
@@ -11,7 +11,6 @@ export const ProductCard = ({
   onDeleteProduct
 }) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
-  const parsedBadges = parseTitleTags(product.title);
 
   const images = product.images && product.images.length > 0
     ? product.images
@@ -62,7 +61,7 @@ export const ProductCard = ({
           }}
         />
         
-        {/* Top Badges overlay: KEEP Discount Pill (-23% OFF) */}
+        {/* Top Badges overlay: Discount Pill (-23% OFF) */}
         {product.discountPercentage > 0 && (
           <div style={{
             position: 'absolute',
@@ -177,7 +176,7 @@ export const ProductCard = ({
               lineHeight: 1.35,
               color: 'var(--text-bright)',
               cursor: 'pointer',
-              marginBottom: '0.65rem',
+              marginBottom: '0.85rem',
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
@@ -188,27 +187,6 @@ export const ProductCard = ({
           >
             {product.title}
           </h4>
-
-          {/* Title Auto-Parsed Badges */}
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '0.35rem',
-            marginBottom: '0.85rem'
-          }}>
-            {parsedBadges.map((badge, idx) => {
-              let badgeClass = 'badge-gold';
-              if (badge.type === 'green') badgeClass = 'badge-green';
-              if (badge.type === 'cyan') badgeClass = 'badge-cyan';
-              if (badge.type === 'red') badgeClass = 'badge-red';
-              if (badge.type === 'purple') badgeClass = 'badge-purple';
-              return (
-                <span key={idx} className={`badge ${badgeClass}`} style={{ fontSize: '0.68rem', padding: '0.18rem 0.5rem' }}>
-                  {badge.label}
-                </span>
-              );
-            })}
-          </div>
 
           {/* Sleek Verified Reviews Button */}
           <button
