@@ -130,10 +130,10 @@ export const parseTitleTags = (title = '') => {
   if (lower.includes('su-30sm2')) tags.push({ label: 'Su-30SM2', type: 'gold' });
   if (lower.includes('mig-29')) tags.push({ label: 'MiG-29', type: 'cyan' });
   if (lower.includes('su-25k')) tags.push({ label: 'Su-25K', type: 'cyan' });
-  if (lower.includes('f-16c') || lower.includes('f16c')) tags.push({ label: 'F-16C', type: 'gold' });
-  if (lower.includes('f-15e') || lower.includes('f15e')) tags.push({ label: 'F-15E', type: 'gold' });
+  if (lower.includes('f-16c') || lower.includes('f16c') || lower.includes('f-16')) tags.push({ label: 'F-16C', type: 'gold' });
+  if (lower.includes('f-15e') || lower.includes('f15e') || lower.includes('f-15') || lower.includes('f18') || lower.includes('f-18')) tags.push({ label: 'F-15E / F-18', type: 'gold' });
   if (lower.includes('f-14') || lower.includes('f14')) tags.push({ label: 'F-14 Tomcat', type: 'gold' });
-  if (lower.includes('av8b')) tags.push({ label: 'AV-8B Harrier', type: 'cyan' });
+  if (lower.includes('av8b') || lower.includes('av-8b')) tags.push({ label: 'AV-8B Harrier', type: 'cyan' });
   
   const slMatch = title.match(/(\\d+(\\.\\d+)?\\s*[mMkK]?)\\s*(silver lions|sl)/i);
   if (slMatch) {
@@ -141,7 +141,7 @@ export const parseTitleTags = (title = '') => {
   }
 
   if (lower.includes('russia') || lower.includes('ussr')) tags.push({ label: 'USSR / Russia', type: 'purple' });
-  if (lower.includes('usa') || lower.includes('us air') || lower.includes('us rank') || lower.includes('us top')) tags.push({ label: 'USA', type: 'purple' });
+  if (lower.includes('usa') || lower.includes('us air') || lower.includes('us rank') || lower.includes('us top') || lower.includes('f18') || lower.includes('f-16') || lower.includes('f-15')) tags.push({ label: 'USA', type: 'purple' });
   if (lower.includes('germany') || lower.includes('german')) tags.push({ label: 'Germany', type: 'purple' });
   if (lower.includes('rank ix') || lower.includes('rank 9')) tags.push({ label: 'Rank IX Air', type: 'purple' });
   if (lower.includes('rank viii') || lower.includes('rank 8')) tags.push({ label: 'Rank VIII', type: 'purple' });
@@ -176,7 +176,7 @@ export const handleBuyNowRedirect = (product) => {
     setTimeout(() => setDownloadSuccessMessage(''), 6000);
   };
 
-  // Robust & Accurate Nation Filtering
+  // Robust & Bulletproof Filter Logic
   const filteredProducts = products.filter((product) => {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -191,36 +191,37 @@ export const handleBuyNowRedirect = (product) => {
       }
     }
 
-    // Precise Nation Filtering without substring collisions ('ussr' !== 'us')
+    // Bulletproof Nation Filtering
     if (selectedNation !== 'All') {
       const pNation = (product.nation || '').toLowerCase().trim();
       const pTitle = (product.title || '').toLowerCase().trim();
+      const featured = (product.featuredVehicles || []).join(' ').toLowerCase();
 
       if (selectedNation === 'USSR') {
-        const isUSSR = pNation.includes('ussr') || pNation.includes('russia') || pTitle.includes('ussr') || pTitle.includes('russia');
+        const isUSSR = pNation.includes('ussr') || pNation.includes('russia') || pTitle.includes('ussr') || pTitle.includes('russia') || featured.includes('su-') || featured.includes('mig-');
         if (!isUSSR) return false;
       } else if (selectedNation === 'USA') {
-        // Must NOT match USSR ('ussr' contains 'us', so we exclude 'ussr')
-        if (pNation.includes('ussr') || pTitle.includes('ussr')) return false;
+        // Match USA cleanly
+        const isUSA = pNation.includes('usa') || pNation === 'us' ||
+                      pTitle.includes('usa') || pTitle.includes('us air') || pTitle.includes('us rank') || pTitle.includes('us top') ||
+                      pTitle.includes('f18') || pTitle.includes('f-18') || pTitle.includes('f16') || pTitle.includes('f-16') || pTitle.includes('f15') || pTitle.includes('f-15') || pTitle.includes('f14') || pTitle.includes('f-14') || pTitle.includes('av8b') || pTitle.includes('abrams') ||
+                      featured.includes('f-16') || featured.includes('f-15') || featured.includes('f-14') || featured.includes('m1a2');
 
-        const isUSA = pNation === 'usa' || pNation === 'us' || pNation.includes('usa') ||
-                      /\b(usa|us air|us ground|us tank|us rank|us top)\b/i.test(pTitle) ||
-                      pTitle.includes('us top tier') || pTitle.includes('us rank 8');
         if (!isUSA) return false;
       } else if (selectedNation === 'Germany') {
-        const isGermany = pNation.includes('germany') || pNation.includes('german') || pTitle.includes('germany') || pTitle.includes('german');
+        const isGermany = pNation.includes('germany') || pNation.includes('german') || pTitle.includes('germany') || pTitle.includes('german') || featured.includes('leopard');
         if (!isGermany) return false;
       } else if (selectedNation === 'Great Britain') {
-        const isBritain = pNation.includes('britain') || pNation.includes('uk') || pTitle.includes('britain') || pTitle.includes('uk');
+        const isBritain = pNation.includes('britain') || pNation.includes('uk') || pTitle.includes('britain') || pTitle.includes('uk') || featured.includes('challenger');
         if (!isBritain) return false;
       } else if (selectedNation === 'Japan') {
-        const isJapan = pNation.includes('japan') || pTitle.includes('japan');
+        const isJapan = pNation.includes('japan') || pTitle.includes('japan') || featured.includes('f-2') || featured.includes('type 90');
         if (!isJapan) return false;
       } else if (selectedNation === 'China') {
-        const isChina = pNation.includes('china') || pTitle.includes('china');
+        const isChina = pNation.includes('china') || pTitle.includes('china') || featured.includes('j-11') || featured.includes('j-10');
         if (!isChina) return false;
       } else if (selectedNation === 'Sweden') {
-        const isSweden = pNation.includes('sweden') || pTitle.includes('sweden');
+        const isSweden = pNation.includes('sweden') || pTitle.includes('sweden') || featured.includes('gripen');
         if (!isSweden) return false;
       } else {
         if (!pNation.includes(selectedNation.toLowerCase()) && !pTitle.includes(selectedNation.toLowerCase())) {
