@@ -9,19 +9,28 @@ import { ProductCard } from './components/ProductCard';
 import { ProductModal } from './components/ProductModal';
 import { UploadModal } from './components/UploadModal';
 import { AdminLoginModal } from './components/AdminLoginModal';
-import { INITIAL_PRODUCTS, DISCORD_SERVER_LINK } from './data/initialProducts';
+import { INITIAL_PRODUCTS, DISCORD_SERVER_LINK, CATALOG_VERSION } from './data/initialProducts';
 import { MessageSquare, ShieldCheck, PlusCircle, RefreshCw, ExternalLink, Lock, ShieldAlert, Check, ShoppingBag, Star, Download, Save, ArrowUpDown, Rocket } from 'lucide-react';
 
 export function App() {
   const [products, setProducts] = useState(() => {
+    const savedVersion = localStorage.getItem('wt_marketplace_catalog_version');
     const saved = localStorage.getItem('wt_marketplace_products');
+
     if (saved) {
       try {
-        return JSON.parse(saved);
+        if (savedVersion && savedVersion >= CATALOG_VERSION) {
+          return JSON.parse(saved);
+        }
+
+        localStorage.removeItem('wt_marketplace_products');
+        console.info('Catalog version changed, clearing stale saved products');
       } catch (e) {
         console.error('Failed to parse saved products', e);
+        localStorage.removeItem('wt_marketplace_products');
       }
     }
+
     return INITIAL_PRODUCTS;
   });
 
@@ -47,8 +56,9 @@ export function App() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
-  // Save products to LocalStorage
+  // Save products to LocalStorage with versioning so stale catalogs are invalidated.
   useEffect(() => {
+    localStorage.setItem('wt_marketplace_catalog_version', CATALOG_VERSION);
     localStorage.setItem('wt_marketplace_products', JSON.stringify(products));
   }, [products]);
 
@@ -109,12 +119,16 @@ export function App() {
     if (window.confirm('Reset catalog to initial sample products?')) {
       setProducts(INITIAL_PRODUCTS);
       localStorage.removeItem('wt_marketplace_products');
+      localStorage.setItem('wt_marketplace_catalog_version', CATALOG_VERSION);
     }
   };
 
   // Download 1-Click initialProducts.js file to upload to GitHub
   const handleDownloadUpdatedCatalogFile = () => {
+    const currentCatalogVersion = new Date().toISOString().slice(0, 19);
     const fileContent = `import { convertGoogleDriveUrl } from '../utils/driveConverter';
+
+export const CATALOG_VERSION = '${currentCatalogVersion}';
 
 export const DISCORD_SERVER_LINK = 'https://discord.gg/ppJV324MR9';
 

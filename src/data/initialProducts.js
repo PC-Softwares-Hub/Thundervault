@@ -1,5 +1,7 @@
 import { convertGoogleDriveUrl } from '../utils/driveConverter';
 
+export const CATALOG_VERSION = '2026-08-12T14:40:00';
+
 export const DISCORD_SERVER_LINK = 'https://discord.gg/ppJV324MR9';
 
 export const FALLBACK_ACCOUNT_IMAGE = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="%230f141d"/><text x="400" y="250" fill="%23f59e0b" font-family="sans-serif" font-size="28" font-weight="700" text-anchor="middle">WAR THUNDER TOP TIER ACCOUNT</text></svg>`;
